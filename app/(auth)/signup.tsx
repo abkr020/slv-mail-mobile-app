@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { colors } from "../../constants/colors";
 import { useAuth } from "../../context/AuthContext";
+import { api } from "@/services/api";
 // import { api } from "../../services/api";
 
 export default function Signup() {
@@ -13,10 +14,10 @@ export default function Signup() {
   const [password, setPassword] = useState("");
 
   const handleSignup = async () => {
-    // const res = await api.signup(name, email, password);
-    // if (!res?.user) return;
-    // login(res);
-    // router.replace('/profile');
+    const res = await api.signup(name, email, password);
+    if (!res?.user) return;
+    login(res);
+    router.replace('/profile');
   };
 
   return (
