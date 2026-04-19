@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showAlert } from "../debug/DevAlert";
+import { MailQueue } from "./mail/mail.queue";
 
 // const BASE_URL = "http://localhost:3334"; // backend URL
 // const BASE_URL = "http://192.168.1.2:3334"; // backend URL
@@ -323,12 +324,29 @@ export const api = {
       const data = await res.json();
 
       if (!res.ok) {
-        return { success: false, message: data?.message };
+        await MailQueue.addToQueue(mailData);
+
+        return {
+          success: false,
+          queued: true,
+          message: data?.message || "Failed, added to queue",
+        };
       }
 
-      return data; // { success: true, traceId: ... }
+      return {
+        success: true,
+        queued: false,
+        data,
+      };
     } catch (error) {
-      return { success: false, message: "Network error" };
+      // ❌ Network / crash fallback → QUEUE IT
+      await MailQueue.addToQueue(mailData);
+
+      return {
+        success: false,
+        queued: true,
+        message: "Network error. Email added to queue and will retry later.",
+      };
     }
   }
 

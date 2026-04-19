@@ -9,6 +9,7 @@ import { ActivityIndicator, View } from "react-native";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { ThemeProvider, useTheme } from "../context/ThemeContext";
 import { api } from "../services/api";
+import { processMailQueue } from "@/services/mail/mail.worker";
 
 function RootNav() {
   const { user, token, loading } = useAuth();
@@ -17,7 +18,10 @@ function RootNav() {
   useEffect(() => {
     api.wakeServer();
     if (token) {
-      api.syncPendingRecords(token);
+      // api.syncPendingRecords(token);
+
+      // ✅ NEW: process mail queue
+      processMailQueue(token);
     }
   }, [token]);
 

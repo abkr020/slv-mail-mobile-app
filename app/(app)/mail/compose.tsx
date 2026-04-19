@@ -49,10 +49,14 @@ export default function ComposeMail() {
   // 🔹 send mail
   
 const handleSend = async () => {
-  if (!to || !subject || !message) {
+  if (!to || !subject) {
     alert("All fields are required");
     return;
   }
+  // if (!to || !subject || !message) {
+  //   alert("All fields are required");
+  //   return;
+  // }
 
   try {
     setLoading(true);
