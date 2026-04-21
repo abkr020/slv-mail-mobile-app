@@ -18,7 +18,6 @@ function RootNav() {
   useEffect(() => {
     api.wakeServer();
     if (token) {
-      // api.syncPendingRecords(token);
 
       // ✅ NEW: process mail queue
       processMailQueue(token);
