@@ -18,6 +18,19 @@ export function Sidebar({
     const { user, logout } = useAuth();
     const insets = useSafeAreaInsets();
 
+    const menuItems = [
+        {
+            id: "inbox",
+            label: "📥 Inbox",
+            route: "/(app)/profile",
+        },
+        {
+            id: "sent",
+            label: "📤 Sent",
+            route: "/(app)/mail/sent",
+        },
+    ] as const;
+
     const handleLogout = async () => {
         await logout();
         router.replace("/(auth)/login");
@@ -42,7 +55,7 @@ export function Sidebar({
             activeOpacity={1}
         >
             <TouchableOpacity
-                style={[styles.sidebar, { backgroundColor: theme.card, paddingBottom: Math.max(insets.bottom, 20) }]}
+                style={[styles.sidebar, { backgroundColor: theme.sideBarBackgroundColor, paddingBottom: Math.max(insets.bottom, 20) }]}
                 activeOpacity={1}
                 onPress={() => { }}
             >
@@ -75,35 +88,27 @@ export function Sidebar({
                         </TouchableOpacity>
                     </View> */}
                     <View style={styles.menuSection}>
-                        <TouchableOpacity
-                            style={[styles.menuItem, { backgroundColor: theme.background }]}
-                            onPress={() => {
-                                onClose();
-                                router.push({ pathname: "/(app)/profile" });
-                            }}
-                        >
-                            <Text style={[styles.menuItemText, { color: theme.text }]}>
-                                📥 Inbox
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[styles.menuItem, { backgroundColor: theme.background }]}
-                            onPress={() => {
-                                onClose();
-                                //   router.push({ pathname: "/(app)/sent" });
-                                // router.push("/sent");
-                                // router.push("(app)/mail/sent");
-                                router.push({ pathname: "/(app)/mail/sent" });
-
-                                // router.push("/(app)/sent");
-                            }}
-                        >
-                            <Text style={[styles.menuItemText, { color: theme.text }]}>
-                                📤 Sent
-                            </Text>
-
-                        </TouchableOpacity>
+                        <View style={styles.menuSection}>
+                            {menuItems.map((item, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[
+                                        styles.menuItem,
+                                        { backgroundColor: theme.sideBarListBackgroundColor },
+                                    ]}
+                                    onPress={() => {
+                                        onClose();
+                                        router.push({ pathname: item.route });
+                                    }}
+                                >
+                                    <Text
+                                        style={[styles.menuItemText, { color: theme.text }]}
+                                    >
+                                        {item.label}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     </View>
 
                     <View style={styles.footer}>

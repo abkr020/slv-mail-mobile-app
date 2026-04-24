@@ -1,6 +1,7 @@
+import { ThemeColors } from "@/constants/colors";
 import { api } from "@/services/api";
 import { router } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -14,6 +15,7 @@ import { useTheme } from "../context/ThemeContext";
 export function InboxList() {
   const { token } = useAuth();
   const { theme } = useTheme();
+  const styles = useMemo(() => createProfileStyles(theme), [theme]);
 
   const [mails, setMails] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -125,8 +127,8 @@ export function InboxList() {
     />
   );
 }
-
-const styles = StyleSheet.create({
+const createProfileStyles = (theme: ThemeColors) =>
+ StyleSheet.create({
   rowBetween: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -156,6 +158,7 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingBottom: 20,
+    borderColor: theme.border
   },
   center: {
     flex: 1,
@@ -167,6 +170,8 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 12,
     marginBottom: 10,
+    borderColor: theme.border,
+    backgroundColor:theme.cardBackgroundColor
   },
   // subject: {
   //   fontSize: 16,

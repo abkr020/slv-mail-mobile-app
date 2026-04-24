@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemeColors } from "../constants/colors";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useRouter } from "expo-router";
 
 interface HeaderProps {
   onMenuPress: () => void;
@@ -11,7 +12,7 @@ interface HeaderProps {
 export function Header({ onMenuPress }: HeaderProps) {
   const { user } = useAuth();
   const { theme } = useTheme();
-
+const router = useRouter();
   const styles = useMemo(() => createStyles(theme), [theme]);
 
   return (
@@ -28,7 +29,10 @@ export function Header({ onMenuPress }: HeaderProps) {
       </View>
 
       {/* RIGHT */}
-      <TouchableOpacity style={styles.profileIcon}>
+      <TouchableOpacity
+        style={styles.profileIcon}
+        onPress={() => router.push("/accounts")}
+      >
         <Text style={styles.profileIconText}>👤</Text>
       </TouchableOpacity>
     </View>
@@ -63,8 +67,8 @@ const createStyles = (theme: ThemeColors) =>
     },
     menuIconText: {
       fontSize: 20,
-      color:theme.text,
-  backgroundColor:theme.background
+      color: theme.text,
+      backgroundColor: theme.background
     },
     profileIcon: {
       width: 40,
