@@ -1,12 +1,13 @@
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { showAlert } from "@/debug/DevAlert";
 import { api } from "@/services/api";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function SentList() {
-  const { token } = useAuth();
+  const { token ,user} = useAuth();
   const { theme } = useTheme();
 
   const [mails, setMails] = useState<any[]>([]);
@@ -19,6 +20,7 @@ export function SentList() {
 
   const loadMails = async () => {
     setLoading(true);
+    await showAlert({title:"getMySentMails",message: JSON.stringify(user)})
     const data = await api.getMySentMails(token);
     setMails(data || []);
     setLoading(false);

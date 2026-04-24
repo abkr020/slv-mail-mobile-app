@@ -1,4 +1,5 @@
 import { ThemeColors } from "@/constants/colors";
+import { showAlert } from "@/debug/DevAlert";
 import { api } from "@/services/api";
 import { router } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -13,7 +14,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
 export function InboxList() {
-  const { token } = useAuth();
+  const { token, user ,currentAccount} = useAuth();
   const { theme } = useTheme();
   const styles = useMemo(() => createProfileStyles(theme), [theme]);
 
@@ -27,6 +28,7 @@ export function InboxList() {
 
   const loadMails = async () => {
     setLoading(true);
+    await showAlert({ title: "multi user get mail", message: JSON.stringify(currentAccount) })
     const data = await api.getMyInBoxMails(token);
     setMails(data || []);
     setLoading(false);
@@ -34,6 +36,8 @@ export function InboxList() {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
+        await showAlert({ title: "multi user load mail", message: JSON.stringify(currentAccount) })
+
     const data = await api.getMyInBoxMails(token);
     setMails(data || []);
     setRefreshing(false);
@@ -128,66 +132,66 @@ export function InboxList() {
   );
 }
 const createProfileStyles = (theme: ThemeColors) =>
- StyleSheet.create({
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
+  StyleSheet.create({
+    rowBetween: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
 
-  from: {
-    fontSize: 14,
-    fontWeight: "600",
-    flex: 1,
-    marginRight: 10,
-  },
+    from: {
+      fontSize: 14,
+      fontWeight: "600",
+      flex: 1,
+      marginRight: 10,
+    },
 
-  date: {
-    fontSize: 12,
-  },
+    date: {
+      fontSize: 12,
+    },
 
-  subject: {
-    fontSize: 14,
-    marginTop: 4,
-    fontWeight: "500",
-  },
+    subject: {
+      fontSize: 14,
+      marginTop: 4,
+      fontWeight: "500",
+    },
 
-  message: {
-    fontSize: 13,
-    marginTop: 2,
-  },
-  list: {
-    paddingBottom: 20,
-    borderColor: theme.border
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 40,
-  },
-  card: {
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 10,
-    borderColor: theme.border,
-    backgroundColor:theme.cardBackgroundColor
-  },
-  // subject: {
-  //   fontSize: 16,
-  //   fontWeight: "600",
-  // },
-  // from: {
-  //   fontSize: 13,
-  //   marginTop: 2,
-  // },
-  text: {
-    fontSize: 14,
-    marginTop: 6,
-  },
-  // date: {
-  //   fontSize: 11,
-  //   marginTop: 8,
-  //   textAlign: "right",
-  // },
-});
+    message: {
+      fontSize: 13,
+      marginTop: 2,
+    },
+    list: {
+      paddingBottom: 20,
+      borderColor: theme.border
+    },
+    center: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 40,
+    },
+    card: {
+      padding: 14,
+      borderRadius: 12,
+      marginBottom: 10,
+      borderColor: theme.border,
+      backgroundColor: theme.cardBackgroundColor
+    },
+    // subject: {
+    //   fontSize: 16,
+    //   fontWeight: "600",
+    // },
+    // from: {
+    //   fontSize: 13,
+    //   marginTop: 2,
+    // },
+    text: {
+      fontSize: 14,
+      marginTop: 6,
+    },
+    // date: {
+    //   fontSize: 11,
+    //   marginTop: 8,
+    //   textAlign: "right",
+    // },
+  });

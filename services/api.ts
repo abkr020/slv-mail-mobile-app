@@ -1,8 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CONFIG } from "../constants/config";
 import { showAlert } from "../debug/DevAlert";
 import { MailQueue } from "./mail/mail.queue";
-import { CONFIG } from "../constants/config";
-import { useAuth } from "@/context/AuthContext";
 
 
 // const BASE_URL = "http://localhost:3334"; // backend URL
@@ -134,7 +132,9 @@ export const api = {
       });
 
       const data = await res.json();
-      // showAlert({ title: "my mail fetch", message: JSON.stringify(data?.mails) })
+      showAlert({ title: "my mail fetch", message: JSON.stringify(data?.mails) + token })
+      console.log("token adn maail", token, data?.mails);
+      
       // console.log("data===",data);
       // console.log("asdf",data.data);
 
@@ -214,6 +214,7 @@ export const api = {
   },
 getMySentMails: async (token: string | null) => {
   try {
+    await showAlert({title:"getMySentMails",message: token})
     const res = await fetch(`${BASE_URL}/api/mail/sent`, {
       method: "GET",
       headers: {

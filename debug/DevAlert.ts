@@ -5,7 +5,7 @@ import { Alert } from "react-native";
 
 interface ShowAlertProps {
   title?: string;
-  message?: string;
+  message?: string | null;
   // buttons?: {
   //   text: string;
   //   onPress?: () => void;
