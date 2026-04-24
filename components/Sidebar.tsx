@@ -20,7 +20,7 @@ export function Sidebar({
 
     const handleLogout = async () => {
         await logout();
-        router.replace('/login');
+        router.replace("/(auth)/login");
     };
 
     const handleProfilePress = () => {
@@ -74,6 +74,37 @@ export function Sidebar({
                             <Text style={[styles.menuItemText, { color: theme.text }]}>⚙️ Settings</Text>
                         </TouchableOpacity>
                     </View> */}
+                    <View style={styles.menuSection}>
+                        <TouchableOpacity
+                            style={[styles.menuItem, { backgroundColor: theme.background }]}
+                            onPress={() => {
+                                onClose();
+                                router.push({ pathname: "/(app)/profile" });
+                            }}
+                        >
+                            <Text style={[styles.menuItemText, { color: theme.text }]}>
+                                📥 Inbox
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.menuItem, { backgroundColor: theme.background }]}
+                            onPress={() => {
+                                onClose();
+                                //   router.push({ pathname: "/(app)/sent" });
+                                // router.push("/sent");
+                                // router.push("(app)/mail/sent");
+                                router.push({ pathname: "/(app)/mail/sent" });
+
+                                // router.push("/(app)/sent");
+                            }}
+                        >
+                            <Text style={[styles.menuItemText, { color: theme.text }]}>
+                                📤 Sent
+                            </Text>
+
+                        </TouchableOpacity>
+                    </View>
 
                     <View style={styles.footer}>
                         <TouchableOpacity style={[styles.menuItem, { backgroundColor: theme.background }]} onPress={handleLogout}>

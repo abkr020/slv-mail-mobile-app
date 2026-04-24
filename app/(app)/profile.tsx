@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { DailyRecordsChart } from "../../components/DailyRecordsChart";
-import { Header } from "@/components/Header";
 import { InboxList } from "@/components/InboxList";
+import { LAYOUT } from "@/constants/layout";
 import { router } from "expo-router";
 import { Sidebar } from "../../components/Sidebar";
 import { ThemeColors } from "../../constants/colors";
@@ -43,10 +43,10 @@ export default function Profile() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{...styles.container,paddingHorizontal: LAYOUT.screenPadding}}>
 
       {/* ✅ Fixed Header */}
-      <Header onMenuPress={() => setSidebarVisible(true)} />
+      {/* <Header onMenuPress={() => setSidebarVisible(true)} /> */}
 
       {/* ✅ Scrollable Content */}
       {/* <ScrollView 

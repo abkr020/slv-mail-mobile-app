@@ -1,6 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showAlert } from "../debug/DevAlert";
 import { MailQueue } from "./mail/mail.queue";
+import { CONFIG } from "../constants/config";
+import { useAuth } from "@/context/AuthContext";
+
 
 // const BASE_URL = "http://localhost:3334"; // backend URL
 // const BASE_URL = "http://192.168.1.2:3334"; // backend URL
@@ -15,9 +18,10 @@ import { MailQueue } from "./mail/mail.queue";
 
 
 // const BASE_SSO_AUTH_URL = "https://sso-auth-backend.onrender.com";
-const BASE_SSO_AUTH_URL = "https://mail-server-backend.onrender.com";
+// const BASE_SSO_AUTH_URL = "https://mail-server-backend.onrender.com";
+const BASE_SSO_AUTH_URL = CONFIG.AUTH_URL;
 // const BASE_URL = "https://gym-mobile-app-backend.onrender.com";
-const BASE_URL = "https://mail-server-backend.onrender.com";
+const BASE_URL = CONFIG.BASE_URL;
 
 
 
@@ -207,6 +211,29 @@ export const api = {
         message: "Network error. Email added to queue and will retry later.",
       };
     }
-  }
+  },
+getMySentMails: async (token: string | null) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/mail/sent`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    const data = await res.json();
+
+    if (!res.ok) {
+      return null;
+    }
+
+    return data.mails || [];
+  } catch (error) {
+    await showAlert({
+      title: "Error",
+      message: JSON.stringify(error),
+    });
+    return [];
+  }
+},
 };
