@@ -4,53 +4,46 @@ import { router } from "expo-router";
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  TouchableOpacity,
 } from "react-native";
 
 export default function AccountsScreen() {
   const { theme } = useTheme();
-  const { accounts, activeIndex, switchAccount } = useAuth();
+  const { accounts, activeIndex, switchAccount, removeAccount } = useAuth();
 
-  const getInitial = (email: string) => {
-    return email?.charAt(0).toUpperCase();
-  };
+  const getInitial = (email: string) =>
+    email?.charAt(0).toUpperCase();
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
 
-      {/* Title */}
       <Text style={[styles.title, { color: theme.text }]}>
         Accounts
       </Text>
 
-      {/* Accounts List */}
       {accounts.map((acc: any, index: number) => {
         const isActive = index === activeIndex;
 
         return (
           <TouchableOpacity
             key={index}
-            // onPress={() => switchAccount(index)}
-            onPress={async () => {
-              await switchAccount(index);
-              router.replace("/profile"); // or "/" if home screen
-            }}
             style={[
-              styles.accountRow,
+              styles.row,
               {
                 backgroundColor: isActive ? theme.card : "transparent",
                 borderColor: theme.border,
               },
             ]}
+            onPress={async () => {
+              if (!isActive) {
+                await switchAccount(index);
+              }
+              router.replace("/profile");
+            }}
           >
             {/* Avatar */}
-            <View
-              style={[
-                styles.avatar,
-                { backgroundColor: theme.primary },
-              ]}
-            >
+            <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
               <Text style={styles.avatarText}>
                 {getInitial(acc.user.email)}
               </Text>
@@ -58,46 +51,31 @@ export default function AccountsScreen() {
 
             {/* Email */}
             <View style={{ flex: 1 }}>
-              <Text
-                style={[
-                  styles.email,
-                  { color: theme.text },
-                ]}
-              >
+              <Text style={{ color: theme.text }}>
                 {acc.user.email}
               </Text>
 
               {isActive && (
-                <Text
-                  style={{
-                    color: theme.secondary,
-                    fontSize: 12,
-                    marginTop: 2,
-                  }}
-                >
+                <Text style={{ color: theme.secondary, fontSize: 12 }}>
                   Active
                 </Text>
               )}
             </View>
 
-            {/* Checkmark */}
-            {isActive && (
-              <Text style={{ color: theme.primary, fontSize: 18 }}>
-                ✓
+            {/* Logout button */}
+            <TouchableOpacity
+              onPress={(e) => {
+                e.stopPropagation(); // ✅ prevent switching
+                removeAccount(index);
+              }}
+            >
+              <Text style={{ color: theme.danger }}>
+                Logout
               </Text>
-            )}
+            </TouchableOpacity>
           </TouchableOpacity>
         );
       })}
-
-      {/* Divider */}
-      <View
-        style={{
-          height: 1,
-          backgroundColor: theme.border,
-          marginVertical: 20,
-        }}
-      />
 
       {/* Add Account */}
       <TouchableOpacity
@@ -105,13 +83,7 @@ export default function AccountsScreen() {
         onPress={() => router.push("/login")}
       >
         <Text style={{ fontSize: 20 }}>＋</Text>
-        <Text
-          style={{
-            marginLeft: 10,
-            color: theme.primary,
-            fontSize: 16,
-          }}
-        >
+        <Text style={{ marginLeft: 10, color: theme.primary }}>
           Add another account
         </Text>
       </TouchableOpacity>
@@ -122,37 +94,39 @@ export default function AccountsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
 
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "700",
     marginBottom: 20,
   },
 
-  accountRow: {
+  row: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
-    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 14,
     marginBottom: 10,
     borderWidth: 1,
   },
 
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: 14,
   },
 
   avatarText: {
-    color: "white",
-    fontWeight: "700",
+    color: "#fff",
     fontSize: 16,
+    fontWeight: "700",
   },
 
   email: {
@@ -160,9 +134,31 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
+  activeLabel: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+
+  logoutButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+
+  logoutText: {
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
   addRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
+    marginTop: 25,
+    paddingVertical: 12,
+  },
+
+  addText: {
+    fontSize: 16,
+    fontWeight: "500",
   },
 });

@@ -64,7 +64,24 @@ export const AuthProvider = ({ children }: any) => {
     await AsyncStorage.setItem("accounts", JSON.stringify(updated));
     await AsyncStorage.setItem("activeIndex", "0");
   };
+const removeAccount = async (index: number) => {
+  const updated = accounts.filter((_, i) => i !== index);
 
+  let newActiveIndex = activeIndex;
+
+  // adjust active index
+  if (index === activeIndex) {
+    newActiveIndex = 0;
+  } else if (index < activeIndex) {
+    newActiveIndex = activeIndex - 1;
+  }
+
+  setAccounts(updated);
+  setActiveIndex(newActiveIndex);
+
+  await AsyncStorage.setItem("accounts", JSON.stringify(updated));
+  await AsyncStorage.setItem("activeIndex", String(newActiveIndex));
+};
   return (
     <AuthContext.Provider
       value={{
@@ -75,6 +92,7 @@ export const AuthProvider = ({ children }: any) => {
         activeIndex,
         login,
         logout,
+        removeAccount,
         switchAccount,
         loading,
       }}
